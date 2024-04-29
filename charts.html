@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="AdminDashboard.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar close">
+  <div class="logo">
+    <span class="logo-name"></span>
+  </div>
+
+  <!-- Navigation menu -->
+  <ul class="nav-list">
+    <!-- Your menu items go here -->
+  </ul>
+</div>
+
+<!-- Main content -->
+<div class="home-section">
+  <div class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="toggle">
+        <ion-icon name="menu-outline"></ion-icon>
+        <div class="home-content">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+      <img src="img/Screenshot 2024-03-16 at 01.30.56.png" alt="" class="lo">
+      <div class="search">
+        <label>
+          <input type="text" placeholder="Search here">
+          <i class="fas fa-search"></i>
+        </label>
+      </div>
+      <a href="AdProfile.html">
+        <div class="user">
+          <img src="img/Screenshot 2024-03-15 at 19.56.42.png" alt="">
+        </div>
+      </a>
+    </div>
+
+    <!-- Cards -->
+    <div class="cardBox">
+      <!-- Your card elements go here -->
+    </div>
+
+    <!-- Order details and recent customers -->
+    <div class="details">
+      <!-- Your order details and recent customers sections go here -->
+    </div>
+
+    <!-- Pie chart container -->
+    <div class="pie-chart-container">
+      <canvas id="inventory-pie-chart" width="600" height="400"></canvas>
+    </div>
+
+    <!-- Bar chart container -->
+    <div class="bar-chart-container">
+      <canvas id="inventory-bar-chart" width="600" height="400"></canvas>
+    </div>
+
+    <!-- Line chart container -->
+    <div class="line-chart-container">
+      <canvas id="inventory-line-chart" width="600" height="400"></canvas>
+    </div>
+
+    <!-- Combo chart container -->
+    <div class="combo-chart-container">
+      <canvas id="inventory-combo-chart" width="600" height="400"></canvas>
+    </div>
+
+
+    <!-- gauge chart  -->
+     <div class="gauge-chart-container">
+      <canvas id="new-customer-gauge-chart" width="400" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Sample inventory data
+  const inventoryData = [
+    { label: 'Product A', quantity: 100 },
+    { label: 'Product B', quantity: 200 },
+    { label: 'Product C', quantity: 150 },
+    { label: 'Product D', quantity: 120 },
+    { label: 'Product E', quantity: 180 },
+    { label: 'Product F', quantity: 220 },
+    { label: 'Product G', quantity: 170 },
+    { label: 'Product H', quantity: 130 }
+  ];
+
+  // Extract labels and quantities
+  const labels = inventoryData.map(item => item.label);
+  const quantities = inventoryData.map(item => item.quantity);
+
+  // Total quantity
+  const totalQuantity = quantities.reduce((total, quantity) => total + quantity, 0);
+
+  // Render pie chart
+  const ctxPie = document.getElementById('inventory-pie-chart').getContext('2d');
+  const inventoryPieChart = new Chart(ctxPie, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: quantities,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)',
+          'rgba(255, 159, 64, 0.7)',
+          'rgba(255, 0, 255, 0.7)',
+          'rgba(0, 255, 0, 0.7)'
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Inventory Level', // Title text
+          font: {
+            size: 18 // Title font size
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const label = context.label || '';
+              const value = context.raw || '';
+              return `${label}: ${value}`;
+            }
+          }
+        },
+        onClick: (event, elements) => {
+          if (elements.length > 0) {
+            const clickedIndex = elements[0].index;
+            const meta = inventoryPieChart.getDatasetMeta(0);
+            const clickedSegment = meta.data[clickedIndex];
+            const model = clickedSegment._model;
+            if (!model.offset) {
+              model.offset = 10;
+            } else {
+              model.offset = 0;
+            }
+            inventoryPieChart.update();
+          }
+        }
+      }
+    }
+  });
+  
+  // Render bar chart
+  const ctxBar = document.getElementById('inventory-bar-chart').getContext('2d');
+  const inventoryBarChart = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Quantity',
+        data: quantities,
+        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const label = context.label || '';
+              const value = context.raw || '';
+              return `${label}: ${value}`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Sample delivery data (weekly)
+  const deliveryData = [
+    [50, 60, 70, 80, 90, 100, 110], // Product A
+    [40, 55, 65, 75, 85, 95, 105], // Product B
+    [60, 70, 80, 90, 100, 110, 120], // Product C
+    [45, 55, 65, 75, 85, 95, 105], // Product D
+    [70, 80, 90, 100, 110, 120, 130], // Product E
+    [55,   65, 75, 85, 95, 105], // Product F
+    [65, 75, 85, 95, 105, 115, 125], // Product G
+    [70, 80, 90, 100, 110, 120, 130] // Product H
+  ];
+
+  // Render line chart
+  const ctxLine = document.getElementById('inventory-line-chart').getContext('2d');
+  const inventoryLineChart = new Chart(ctxLine, {
+    type: 'line',
+    data: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'], // Sample weeks
+      datasets: labels.map((label, index) => ({
+        label: label,
+        data: deliveryData[index],
+        borderColor: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.7)`,
+        fill: false
+      }))
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Delivery per Week', // Title text
+          font: {
+            size: 18 // Title font size
+          }
+        }
+      }
+    }
+  });
+
+// Render combo chart
+const ctxCombo = document.getElementById('inventory-combo-chart').getContext('2d');
+  const inventoryComboChart = new Chart(ctxCombo, {
+    type: 'bar',
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'], // Sample months
+      datasets: [{
+        label: 'Total Delivery',
+        data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 100)), // Sample delivery data
+        borderColor: 'rgba(255, 99, 132, 0.7)',
+        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+        type: 'bar'
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Monthly Delivery', // Title text
+          font: {
+            size: 18 // Title font size
+          }
+        }
+      }
+    }
+  });
+});
+
+</script>
+
+<style>
+  /* AdminDashboard.css */
+  .pie-chart-container,
+  .bar-chart-container,
+  .line-chart-container,
+  .combo-chart-container {
+    width: 600px;
+    height: 400px;
+    margin-top: 20px;
+  }
+</style>
+
+</body>
+</html>
+

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="AdminDashboard.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar close">
+  <div class="logo">
+    <span class="logo-name"></span>
+  </div>
+
+  <!-- Navigation menu -->
+  <ul class="nav-list">
+    <!-- Your menu items go here -->
+  </ul>
+</div>
+
+<!-- Main content -->
+<div class="home-section">
+  <div class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="toggle">
+        <ion-icon name="menu-outline"></ion-icon>
+        <div class="home-content">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+      <img src="img/Screenshot 2024-03-16 at 01.30.56.png" alt="" class="lo">
+      <div class="search">
+        <label>
+          <input type="text" placeholder="Search here">
+          <i class="fas fa-search"></i>
+        </label>
+      </div>
+      <a href="AdProfile.html">
+        <div class="user">
+          <img src="img/Screenshot 2024-03-15 at 19.56.42.png" alt="">
+        </div>
+      </a>
+    </div>
+
+    <!-- Cards -->
+    <div class="cardBox">
+      <!-- Your card elements go here -->
+    </div>
+
+    <!-- Order details and recent customers -->
+    <div class="details">
+      <!-- Your order details and recent customers sections go here -->
+    </div>
+
+    <!-- Pie chart container -->
+    <div class="pie-chart-container">
+      <canvas id="inventory-pie-chart" width="600" height="400"></canvas>
+    </div>
+  </div>
+</div>
+<!-- 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Sample inventory data
+  const inventoryData = [
+    { label: 'Product A', quantity: 100 },
+    { label: 'Product B', quantity: 200 },
+    { label: 'Product C', quantity: 150 }
+  ];
+
+  // Extract labels and quantities
+  const labels = inventoryData.map(item => item.label);
+  const quantities = inventoryData.map(item => item.quantity);
+
+  // Total quantity
+  const totalQuantity = quantities.reduce((total, quantity) => total + quantity, 0);
+
+  // Render pie chart
+  const ctx = document.getElementById('inventory-pie-chart').getContext('2d');
+  const inventoryPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: quantities,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)'
+        ],
+        borderWidth: 3 // Change borderWidth to make it 3D
+      }]
+    },
+    options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const label = context.label || '';
+              const value = context.raw || '';
+              const percentage = (value / totalQuantity) * 100;
+              return `${label}: ${value} ( ${percentage.toFixed(2)}% )`;
+            }
+          }
+        }
+      },
+      onClick: (event, elements) => {
+        if (elements.length > 0) {
+          const clickedIndex = elements[0].index;
+          const meta = inventoryPieChart.getDatasetMeta(0);
+          const clickedSegment = meta.data[clickedIndex];
+          const model = clickedSegment._model;
+          if (!model.offset) {
+            model.offset = 10;
+          } else {
+            model.offset = 0;
+          }
+          inventoryPieChart.update();
+        }
+      }
+    }
+  });
+});
+</script> -->
+
+<div class="line-chart-container">
+    <canvas id="delivery-checks-line-chart" width="600" height="400"></canvas>
+  </div>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Sample delivery checks data (replace with your actual data)
+    const deliveryChecksData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [{
+        label: 'Delivery Checks',
+        data: [50, 80, 70, 90, 60, 85],
+        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderWidth: 2,
+        fill: true
+      }]
+    };
+  
+    // Render line chart
+    const ctx = document.getElementById('delivery-checks-line-chart').getContext('2d');
+    const lineChart = new Chart(ctx, {
+      type: 'line',
+      data: deliveryChecksData,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+  </script>
+
+<style>
+  /* AdminDashboard.css */
+  .pie-chart-container {
+    width: 600px;
+    height: 400px;
+  }
+
+</style>
+
+
+
+<style>
+.line-chart-container {
+    width: 600px;
+    height: 400px;
+  }
+</style>
+
+<script src="pie.js"></script>
+
+</body>
+</html>
